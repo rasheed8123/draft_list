@@ -52,7 +52,7 @@ export const players: Player[] = [
     "Genuine match-winner with bat and ball — the ultimate auction asset.",
     { matches: 178, runs: 1718, average: 14.08, strikeRate: 140.94, hundreds: 0, fifties: 3, wickets: 21, economy: 8, bestBowling: "3/2", catches: 45 },
     [55, 30, 80, 60, 45, 90, 35, 70, 50, 85],
-    ["MVP World Cup 2023", "1000+ runs & 100+ wickets", "Power-play strike rate: 162"]),
+    ["Amazing spiderman", "Smooth Striker", "The ultimate all-rounder"]),
 
   make("z-khan", "Zayn Khan", "Wicket-keeper", "Pakistan", "Lahore Lions", 27, "₹1.1 Cr",
     "Right-handed", "—",
