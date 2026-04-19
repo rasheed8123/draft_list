@@ -1,11 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
+import { Send, Sparkles, AlertCircle } from "lucide-react";
 import type { Player } from "@/data/players";
-
-interface Msg {
-  role: "user" | "assistant";
-  content: string;
-}
+import { useChat } from "@/hooks/use-chat";
 
 const suggestions = [
   "Summarize this player",
@@ -15,37 +11,19 @@ const suggestions = [
   "Worth the base price?",
 ];
 
-const mockReply = (player: Player, q: string): string => {
-  const s = player.stats;
-  const lower = q.toLowerCase();
-  if (lower.includes("summar")) {
-    return `**${player.name}** is a ${player.role.toLowerCase()} from ${player.country} playing for ${player.team}. Across ${s.matches} matches he has scored ${s.runs} runs at an average of ${s.average} and a strike rate of ${s.strikeRate}, with ${s.wickets} wickets. ${player.tagline}`;
-  }
-  if (lower.includes("consist")) {
-    const avg = player.recentForm.reduce((a, b) => a + b, 0) / player.recentForm.length;
-    return `Looking at his last 10 outings (avg ${avg.toFixed(1)}), there is **${avg > 55 ? "strong" : avg > 35 ? "moderate" : "patchy"}** consistency. His career average of ${s.average} suggests he can be relied upon in most match situations.`;
-  }
-  if (lower.includes("pressure") || lower.includes("death") || lower.includes("chase")) {
-    return `In high-pressure scenarios ${player.name} ${player.role === "Bowler" ? `holds an economy of ${s.economy} with a best of ${s.bestBowling}` : `strikes at ${s.strikeRate}`}. The recent-form trend shows he ${player.recentForm.slice(-3).reduce((a,b)=>a+b,0) > 150 ? "is peaking right now" : "is finding his rhythm"} — a real asset in knockout games.`;
-  }
-  if (lower.includes("price") || lower.includes("worth") || lower.includes("value")) {
-    return `At a base price of **${player.basePrice}**, ${player.name} offers strong value given his ${s.matches}-match resume and ${player.role === "Bowler" ? `${s.wickets} wickets at ${s.economy} economy` : `${s.runs} runs at SR ${s.strikeRate}`}. Expect bidding wars from teams needing a ${player.role.toLowerCase()}.`;
-  }
-  if (lower.includes("strength") || lower.includes("weak")) {
-    return `**Strengths:** ${player.highlights.join(", ")}. **Areas to watch:** consistency vs top-tier opposition and adapting across overseas conditions. Overall, a high-ceiling pick.`;
-  }
-  return `Based on ${player.name}'s data — ${s.matches} matches, ${s.runs} runs, ${s.wickets} wickets — here's the take: ${player.tagline} His recent form (last 10: ${player.recentForm.join(", ")}) backs that read.\n\n*This is a preview of the AI insights. Connect the AI engine to get live, deep analysis.*`;
-};
-
 export const AIChatPanel = ({ player }: { player: Player }) => {
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: "assistant",
-      content: `Hi! I'm your scouting assistant for **${player.name}**. Ask me anything about his form, stats, role fit, or auction value.`,
-    },
-  ]);
+  const [chatKey, setChatKey] = useState(0);
+  
+  // Re-initialize chat when player name changes
+  useEffect(() => {
+    setChatKey(prev => prev + 1);
+  }, [player.name]);
+
+  const { messages, loading, error, sendMessage, clearError } = useChat(
+    `Hi! I'm your scouting assistant for **${player.name}**. Ask me anything about his form, stats, role fit, or auction value.`,
+    chatKey
+  );
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,14 +31,9 @@ export const AIChatPanel = ({ player }: { player: Player }) => {
   }, [messages, loading]);
 
   const send = (text: string) => {
-    if (!text.trim()) return;
-    setMessages((m) => [...m, { role: "user", content: text }]);
+    if (!text.trim() || loading) return;
     setInput("");
-    setLoading(true);
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: "assistant", content: mockReply(player, text) }]);
-      setLoading(false);
-    }, 700);
+    sendMessage(player.id, text);
   };
 
   return (
@@ -88,6 +61,14 @@ export const AIChatPanel = ({ player }: { player: Player }) => {
             />
           </div>
         ))}
+        {error && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-lg px-3 py-2 text-sm bg-destructive/10 border border-destructive/30 text-destructive flex gap-2 items-start">
+              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">{error}</div>
+            </div>
+          </div>
+        )}
         {loading && (
           <div className="flex justify-start">
             <div className="bg-secondary/60 border border-border rounded-lg px-3 py-2 text-sm">

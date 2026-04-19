@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { ApiPlayerRow } from "@/components/ApiPlayerRow";
+import { TrendingPlayersSection } from "@/components/TrendingPlayersSection";
 import { usePlayersApi } from "@/hooks/use-players-api";
 import { PlayerRow } from "@/components/PlayerRow";
 import { players } from "@/data/players";
@@ -17,8 +18,8 @@ const Index = () => {
       <div className="min-h-screen bg-background">
         <Navbar categories={[]} />
         <main>
-          <Hero featured={featured} />
-          <div className="relative -mt-20 z-10 pb-24 px-6 md:px-12">
+          <TrendingPlayersSection />
+          <div className="px-6 md:px-12 py-12 max-w-[1400px] mx-auto">
             <div className="flex items-center gap-3 bg-destructive/10 border border-destructive/30 rounded-lg p-6 max-w-2xl">
               <AlertCircle className="h-6 w-6 text-destructive flex-shrink-0" />
               <div>
@@ -37,8 +38,8 @@ const Index = () => {
       <div className="min-h-screen bg-background">
         <Navbar categories={[]} />
         <main>
-          <Hero featured={featured} />
-          <div className="relative -mt-20 z-10 pb-24 px-6 md:px-12">
+          <TrendingPlayersSection />
+          <div className="px-6 md:px-12 py-12 max-w-[1400px] mx-auto">
             <div className="flex items-center gap-3 justify-center py-12">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <span className="text-muted-foreground">Loading players...</span>
@@ -53,8 +54,11 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar categories={data && data.data ? Object.keys(data.data) : []} />
       <main>
-        <Hero featured={featured} />
-        <div className="relative -mt-20 z-10 pb-24">
+        {/* Trending Players Section */}
+        <TrendingPlayersSection />
+
+        {/* Players by Category */}
+        <div className="relative pb-24">
           {data && data.data && Object.entries(data.data).length > 0 ? (
             // Dynamically render categories from API
             Object.entries(data.data).map(([category, categoryPlayers]) => (

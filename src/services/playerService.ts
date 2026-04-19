@@ -144,3 +144,37 @@ export const transformApiPlayerForDisplay = (
     bowling: player.bowling,
   };
 };
+
+export interface TrendingPlayer {
+  rank: number;
+  playerId: string;
+  playerName: string;
+  role: string;
+  team: string;
+  country: string;
+  queryCount: number;
+  mostAskedQuestion: string;
+  questionInsight?: string;
+  playerDetails?: PlayerStatsDetail;
+}
+
+export interface TrendingPlayersResponse {
+  status: string;
+  message: string;
+  data: TrendingPlayer[];
+}
+
+// Fetch trending players
+export const fetchTrendingPlayers = async (): Promise<TrendingPlayersResponse> => {
+  try {
+    const response = await fetch(API_ENDPOINTS.TRENDING_PLAYERS);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: TrendingPlayersResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch trending players:", error);
+    throw error;
+  }
+};

@@ -21,3 +21,9 @@ export const getCricketImageForPlayer = (playerId: string | number): string => {
   const index = idNumber % cricketImages.length;
   return cricketImages[index];
 };
+
+// Get player image from assets/players folder, fallback to dummy image
+export const getPlayerImageUrl = (playerId: string | number, playerName?: string): string => {
+  const imageUrl = `/assets/players/${playerId}.jpg`;
+  return imageUrl;
+};

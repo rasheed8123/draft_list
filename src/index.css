@@ -9,67 +9,70 @@
 
 @layer base {
   :root {
-    /* Base surfaces — deep cinematic blacks */
-    --background: 0 0% 6%;
+    /* Base surfaces — luxury black */
+    --background: 0 0% 4%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 9%;
+    --card: 45 40% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 8%;
+    --popover: 45 35% 10%;
     --popover-foreground: 0 0% 98%;
 
-    /* Brand: cricket crimson with electric accent */
-    --primary: 0 84% 56%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 0 90% 65%;
+    /* Brand: luxurious gold with black */
+    --primary: 43 89% 60%;
+    --primary-foreground: 0 0% 8%;
+    --primary-glow: 48 96% 68%;
 
-    --secondary: 0 0% 14%;
+    --secondary: 45 50% 20%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 64%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 38 92% 55%;
+    --accent: 43 89% 55%;
     --accent-foreground: 0 0% 8%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 14%;
-    --ring: 0 84% 56%;
+    --border: 45 60% 18%;
+    --input: 45 40% 14%;
+    --ring: 43 89% 60%;
 
     --radius: 0.6rem;
 
-    /* Role colors */
-    --batsman: 200 95% 60%;
-    --bowler: 142 70% 50%;
-    --allrounder: 38 92% 55%;
-    --keeper: 280 75% 65%;
+    /* Role colors — gold and black variants */
+    --batsman: 200 95% 65%;
+    --bowler: 142 75% 55%;
+    --allrounder: 43 89% 60%;
+    --keeper: 280 75% 70%;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 6% / 0) 0%, hsl(0 0% 6% / 0.6) 60%, hsl(0 0% 6%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 12%) 0%, hsl(0 0% 8%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.25), transparent 60%);
+    /* Gradients — black and gold luxury theme */
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 4% / 0) 0%, hsl(45 40% 10% / 0.4) 50%, hsl(0 0% 4%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(45 40% 14%) 0%, hsl(45 30% 10%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(43 89% 60%) 0%, hsl(48 96% 68%) 100%);
+    --gradient-gold-black: linear-gradient(135deg, hsl(43 89% 60%) 0%, hsl(0 0% 8%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(43 89% 60% / 0.35), transparent 70%);
+    --gradient-subtle: linear-gradient(90deg, hsl(45 40% 12% / 0.5) 0%, hsl(0 0% 6% / 0.5) 100%);
 
-    /* Shadows */
-    --shadow-card: 0 10px 30px -10px hsl(0 0% 0% / 0.6);
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.4);
-    --shadow-elevated: 0 25px 60px -15px hsl(0 0% 0% / 0.8);
+    /* Shadows — gold-tinted luxury */
+    --shadow-card: 0 10px 40px -10px hsl(43 89% 60% / 0.2);
+    --shadow-glow: 0 0 60px hsl(43 89% 60% / 0.35);
+    --shadow-elevated: 0 25px 70px -15px hsl(43 89% 60% / 0.25);
+    --shadow-gold: inset 0 1px 2px hsl(43 89% 60% / 0.2);
 
     /* Motion */
     --transition-smooth: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
-    --sidebar-background: 0 0% 8%;
+    --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 0 84% 56%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 14%;
+    --sidebar-primary: 43 89% 60%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 45 50% 20%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 0 84% 56%;
+    --sidebar-border: 45 60% 18%;
+    --sidebar-ring: 43 89% 60%;
   }
 }
 
@@ -80,7 +83,39 @@
   html, body, #root {
     @apply bg-background text-foreground;
     min-height: 100%;
+    background: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(45 30% 8%) 50%, hsl(0 0% 5%) 100%);
+    position: relative;
   }
+  
+  /* Animated background orbs */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, hsl(43 89% 60% / 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float-slow 15s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    left: -5%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, hsl(43 89% 50% / 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float-slow-reverse 18s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
   body {
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -91,29 +126,147 @@
   }
 }
 
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-30px) translateX(-15px);
+  }
+}
+
+@keyframes float-slow-reverse {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(30px) translateX(15px);
+  }
+}
+
 @layer utilities {
   .gradient-hero { background-image: var(--gradient-hero); }
   .gradient-card { background-image: var(--gradient-card); }
   .gradient-primary { background-image: var(--gradient-primary); }
+  .gradient-gold-black { background-image: var(--gradient-gold-black); }
   .gradient-glow { background-image: var(--gradient-glow); }
+  .gradient-subtle { background-image: var(--gradient-subtle); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .shadow-elevated { box-shadow: var(--shadow-elevated); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
   .transition-smooth { transition: var(--transition-smooth); }
+  
+  /* Gold accent text */
+  .text-gold { @apply text-primary; }
+  .text-gold-light { @apply text-primary-glow; }
+  
+  /* Gold borders */
+  .border-gold { @apply border-primary; }
+  .border-gold-glow { @apply border-accent; }
 
   /* Hide scrollbar for horizontal rows */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
+/* Elegant animations */
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
-.animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in-up { 
+  animation: fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; 
+}
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
-  50% { box-shadow: 0 0 0 12px hsl(var(--primary) / 0); }
+  0%, 100% { 
+    box-shadow: 0 0 0 0 hsl(43 89% 60% / 0.4); 
+  }
+  50% { 
+    box-shadow: 0 0 0 15px hsl(43 89% 60% / 0); 
+  }
 }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-pulse-glow { 
+  animation: pulse-glow 3s ease-in-out infinite; 
+}
+
+/* Gold shimmer effect */
+@keyframes gold-shimmer {
+  0% { 
+    background-position: -1000px 0; 
+  }
+  100% { 
+    background-position: 1000px 0; 
+  }
+}
+.animate-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(0 0% 10%) 0%,
+    hsl(43 89% 60%) 20%,
+    hsl(48 96% 68%) 50%,
+    hsl(43 89% 60%) 80%,
+    hsl(0 0% 10%) 100%
+  );
+  background-size: 1000px 100%;
+  animation: gold-shimmer 3s infinite;
+}
+
+/* Glow float animation */
+@keyframes glow-float {
+  0%, 100% { 
+    transform: translateY(0px); 
+    box-shadow: 0 0 30px hsl(43 89% 60% / 0.3); 
+  }
+  50% { 
+    transform: translateY(-8px); 
+    box-shadow: 0 0 50px hsl(43 89% 60% / 0.5); 
+  }
+}
+.animate-glow-float { 
+  animation: glow-float 4s ease-in-out infinite; 
+}
+
+/* Gradient shift */
+@keyframes gradient-shift {
+  0%, 100% { 
+    background-position: 0% 50%; 
+  }
+  50% { 
+    background-position: 100% 50%; 
+  }
+}
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* Rotate slow */
+@keyframes rotate-slow {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+.animate-rotate-slow { 
+  animation: rotate-slow 20s linear infinite; 
+}
+
+/* Scale up on hover helper */
+@keyframes scale-up-hover {
+  from { 
+    transform: scale(1); 
+  }
+  to { 
+    transform: scale(1.05); 
+  }
+}

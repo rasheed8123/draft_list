@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
-import { getCricketImageForPlayer } from "@/lib/cricket-images";
+import { getPlayerImageUrl } from "@/lib/cricket-images";
+import { getDummyAvatar } from "@/lib/avatar";
 import type { ApiPlayer } from "@/services/playerService";
+import { useState } from "react";
 
 interface Props {
   player: ApiPlayer;
@@ -23,8 +25,9 @@ export const ApiPlayerAvatar = ({ player, className, size = "md" }: Props) => {
     .join("")
     .toUpperCase();
 
-  // Use cricket image based on player ID
-  const avatarUrl = getCricketImageForPlayer(player.playerId);
+  const [imageError, setImageError] = useState(false);
+  // Try to load player image, fallback to dummy avatar
+  const avatarUrl = imageError ? getDummyAvatar(player.playerName) : getPlayerImageUrl(player.playerId);
 
   return (
     <div className={cn("relative h-full w-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20", className)}>
@@ -33,9 +36,11 @@ export const ApiPlayerAvatar = ({ player, className, size = "md" }: Props) => {
         alt={player.playerName}
         loading="lazy"
         className="h-full w-full object-cover"
-        onError={(e) => {
-          // Fallback to initials if image fails to load
-          (e.target as HTMLImageElement).style.display = "none";
+        onError={() => {
+          // Fallback to dummy avatar if image fails to load
+          if (!imageError) {
+            setImageError(true);
+          }
         }}
       />
       <div className="absolute inset-0 hidden flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 text-white font-bold">

@@ -1,12 +1,14 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Trophy, Target, TrendingUp, Activity, Loader2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Target, TrendingUp, Activity, Loader2, AlertCircle, Trophy, Share2 } from "lucide-react";
+import { useState } from "react";
 import { getPlayer } from "@/data/players";
 import { usePlayerStats } from "@/hooks/use-player-stats";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { PerformanceChart } from "@/components/PerformanceChart";
 import { AIChatPanel } from "@/components/AIChatPanel";
 import { getRandomMotivation } from "@/lib/motivations";
-import { getCricketImageForPlayer } from "@/lib/cricket-images";
+import { getPlayerImageUrl } from "@/lib/cricket-images";
+import { getDummyAvatar } from "@/lib/avatar";
 import heroImg from "@/assets/hero-stadium.jpg";
 
 const StatCard = ({ icon: Icon, label, value, accent }: { icon: any; label: string; value: string | number; accent?: boolean }) => (
@@ -21,6 +23,7 @@ const StatCard = ({ icon: Icon, label, value, accent }: { icon: any; label: stri
 
 const PlayerDetail = () => {
   const { id } = useParams();
+  const [imageError, setImageError] = useState(false);
   const player = id ? getPlayer(id) : undefined;
   const { data: apiPlayerStats, loading: statsLoading, error: statsError } = usePlayerStats(id);
 
@@ -58,8 +61,8 @@ const PlayerDetail = () => {
   const finalPlayerName = apiPlayerStats?.playerName || displayPlayer.name;
   const finalTagline = apiPlayerStats?.tagline || getRandomMotivation();
 
-  // Get consistent image for this player
-  const playerImage = getCricketImageForPlayer(id || "");
+  // Get consistent image for this player from assets/players folder, with fallback to dummy avatar
+  const playerImage = imageError ? getDummyAvatar(finalPlayerName) : getPlayerImageUrl(id || "");
 
   // For API players, try to map API response to stats format
   const mappedStats = apiPlayerStats && !player
@@ -87,12 +90,23 @@ const PlayerDetail = () => {
         <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
         <div className="absolute inset-0 gradient-glow" />
-        <Link
-          to="/"
-          className="absolute top-6 left-6 md:left-12 z-10 inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground transition-smooth bg-secondary/60 backdrop-blur-sm border border-border px-3 py-1.5 rounded-md"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to roster
-        </Link>
+        
+        <div className="absolute top-6 left-6 md:left-12 z-10 flex items-center gap-2">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground transition-smooth bg-secondary/60 backdrop-blur-sm border border-border px-3 py-1.5 rounded-md"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to roster
+          </Link>
+          
+          <Link
+            to={`/share/player/${id}`}
+            className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow transition-smooth bg-primary/20 backdrop-blur-sm border border-primary/40 px-3 py-1.5 rounded-md hover:bg-primary/30 shadow-glow"
+            title="Create Share Card"
+          >
+            <Share2 className="h-4 w-4" /> Share Card
+          </Link>
+        </div>
       </div>
 
       <main className="px-6 md:px-12 -mt-32 relative z-10 pb-20 max-w-[1400px] mx-auto">
@@ -124,6 +138,11 @@ const PlayerDetail = () => {
                   src={playerImage} 
                   alt={displayPlayer.name}
                   className="h-full w-full object-cover"
+                  onError={() => {
+                    if (!imageError) {
+                      setImageError(true);
+                    }
+                  }}
                 />
               </div>
               <div className="p-5">
@@ -150,17 +169,7 @@ const PlayerDetail = () => {
               </div>
             </div>
 
-            <div className="mt-6 gradient-card border border-border rounded-xl p-5">
-              <h3 className="font-display text-lg mb-3 flex items-center gap-2"><Trophy className="h-4 w-4 text-accent" /> Highlights</h3>
-              <ul className="space-y-2">
-                {displayPlayer.highlights.map((h, i) => (
-                  <li key={i} className="text-sm text-muted-foreground flex gap-2">
-                    <span className="text-primary mt-1">▸</span>
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+
           </aside>
 
           {/* CENTER: Stats + Chart */}
@@ -269,18 +278,12 @@ const PlayerDetail = () => {
               </div>
             )}
 
-            <div className="mt-8 gradient-card border border-border rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display text-xl tracking-wide">Recent Form · Last 10</h3>
-                <span className="text-xs text-muted-foreground">{isBowler ? "Wicket impact score" : "Runs per innings"}</span>
-              </div>
-              <PerformanceChart data={displayPlayer.recentForm} label={isBowler ? "Impact" : "Runs"} />
-            </div>
+
           </section>
 
           {/* RIGHT: AI Chat */}
           <aside className="lg:col-span-4 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
-            <AIChatPanel player={displayPlayer} />
+            <AIChatPanel player={{ ...displayPlayer, name: finalPlayerName }} />
           </aside>
         </div>
       </main>
