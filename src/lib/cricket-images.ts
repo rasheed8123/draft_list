@@ -24,6 +24,6 @@ export const getCricketImageForPlayer = (playerId: string | number): string => {
 
 // Get player image from assets/players folder, fallback to dummy image
 export const getPlayerImageUrl = (playerId: string | number, playerName?: string): string => {
-  const imageUrl = `/assets/players/${playerId}.jpg`;
+  const imageUrl = `/assets/players/${playerId}.png`;
   return imageUrl;
 };
