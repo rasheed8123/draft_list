@@ -60,7 +60,7 @@ export const Navbar = ({ categories = [] }: NavbarProps) => {
                       className="block px-4 py-2 hover:bg-primary/20 hover:text-primary transition-smooth capitalize text-sm"
                       onClick={() => setDropdownOpen(false)}
                     >
-                      Category {category.toUpperCase()}
+                     {category.toUpperCase()}
                     </a>
                   ))
                 ) : (

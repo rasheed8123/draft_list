@@ -146,7 +146,7 @@ const PlayerDetail = () => {
                 />
               </div>
               <div className="p-5">
-                <span className="text-xs uppercase tracking-wider text-primary font-semibold">{displayPlayer.role}</span>
+                {/* <span className="text-xs uppercase tracking-wider text-primary font-semibold">{displayPlayer.role}</span> */}
                 <h1 className="font-display text-3xl mt-1 leading-tight">{finalPlayerName}</h1>
                 <p className="text-sm text-muted-foreground mt-1">{displayPlayer.country}</p>
                 {apiPlayerStats && (
@@ -155,10 +155,16 @@ const PlayerDetail = () => {
 
                 <div className="mt-5 space-y-3 text-sm">
                   <Row k="Team" v={displayPlayer.team} />
-                  <Row k="Age" v={`${displayPlayer.age} yrs`} />
                   <Row k="Batting" v={displayPlayer.battingStyle} />
                   <Row k="Bowling" v={displayPlayer.bowlingStyle} />
-                  <Row k="Base Price" v={<span className="text-primary font-display text-lg">{displayPlayer.basePrice}</span>} />
+                  <Row
+                    k="Base Price"
+                    v={
+                      <span className="text-primary font-display text-lg">
+                        {getBasePriceFromCategory(apiPlayerStats?.category)}
+                      </span>
+                    }
+                  />
                   {apiPlayerStats?.meta && (
                     <>
                       <Row k="Source" v={apiPlayerStats.meta.source || "—"} />
@@ -289,6 +295,20 @@ const PlayerDetail = () => {
       </main>
     </div>
   );
+};
+
+const getBasePriceFromCategory = (category?: string) => {
+  if (!category) return "500 pts";
+
+  const c = category
+    .toLowerCase()
+    .replace(/\s+/g, " ") // normalize spaces
+    .trim();
+
+  if (c === "all rounder 1" || c === "batsman 1") return "2000 pts";
+  if (c === "all rounder 2" || c === "batsman 2") return "1000 pts";
+
+  return "500 pts";
 };
 
 const Row = ({ k, v }: { k: string; v: React.ReactNode }) => (
